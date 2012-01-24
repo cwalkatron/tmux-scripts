@@ -1,0 +1,31 @@
+#!/bin/bash
+
+ARGS=$(getopt -o t:h -n "tssh" -- "$@")
+
+usage () {
+    cat <<EOF
+Usage $(basename $0) [ -n WINDOWNAME ] [ HOST [ HOST ... ] ]
+
+ -n             : name the tmux window WINDOWNAME
+
+Open a new tmux window with a pane for an ssh session to each HOST
+EOF
+}
+
+eval set -- "$ARGS"
+
+# option processing
+while true; do
+    case "$1" in
+        -t) WNAME=${2}; shift 2;;
+        -h) usage; exit 0;;
+        --) shift; break;;
+        *) echo "Internal error!"; exit 1;;
+    esac
+done
+
+n=$(tmux neww -n ${WNAME} -dP "ssh $(shift)")
+for m in $*; do
+    tmux splitw -t $n -h "ssh $m"
+    tmux selectl -t $n even-vertical
+done

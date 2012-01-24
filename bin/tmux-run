@@ -7,10 +7,10 @@ if [ $# -gt 0 ]; then
     SESSION2=${SESSION}-${1}
 fi
 
-if tmux has-session -t $SESSION >/dev/null 2>&1; then
+if tmux has-session -t $SESSION ; then
     if [ ! -z $SESSION2 ]; then
         # make another session that targets the first
-        if tmux has-session -t $SESSION2 >/dev/null 2>&1; then
+        if tmux has-session -t $SESSION2 ; then
             tmux -2 -u attach -t $SESSION2
         else
             tmux -2 -u new-session -s $SESSION2 -t $SESSION
