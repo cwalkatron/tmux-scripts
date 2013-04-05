@@ -11,32 +11,34 @@ if tmux has-session -t $SESSION ; then
     if [ ! -z $SESSION2 ]; then
         # make another session that targets the first
         if tmux has-session -t $SESSION2 ; then
-            tmux -2 -u attach -t $SESSION2
+            tmux -2 attach -t $SESSION2
         else
-            tmux -2 -u new-session -s $SESSION2 -t $SESSION
+            tmux -2 new-session -s $SESSION2 -t $SESSION
         fi
     else
-        tmux -2 -u attach -t $SESSION
+        tmux -2 attach -t $SESSION
     fi
     exit 0;
 fi
 
 # Create a new session, named $SESSION, and detach from it
 # I only want one session at a time.
-tmux -2 -u new-session -d -s $SESSION
+tmux -2 new-session -d -s $SESSION
+
+tmux setenv LANG $LANG
 
 # IRC
 tmux neww -d -t $SESSION:1 -k weechat-curses
 tmux set-window-option -t $SESSION:1 automatic-rename off
 # highlight window if you are mentioned in IRC. 
 tmux set-window-option -t $SESSION:1 monitor-content $IRC_NICK
+sleep 1
 tmux rename-window -t $SESSION:1 irc
 
 # Mail
 tmux neww -d -t $SESSION:3 mutt
 
 # Shells
-tmux neww -d -t $SESSION:0
 tmux neww -d -t $SESSION:2
 tmux neww -d -t $SESSION:4
 tmux neww -d -t $SESSION:5
@@ -45,4 +47,4 @@ tmux neww -d -t $SESSION:6 -n csh "exec /bin/csh"
 # go to mail
 tmux select-window -t $SESSION:3
 
-tmux -2 -u attach -t $SESSION
+tmux -2 attach -t $SESSION
