@@ -24,8 +24,10 @@ while true; do
     esac
 done
 
-n=$(tmux neww -n ${WNAME} -dP "ssh $(shift)")
+first=$1; shift
+n=$(tmux neww -n ${WNAME} -dP "ssh $first")
+nw=$(echo ${n} | cut -d. -f1)
 for m in $*; do
-    tmux splitw -t $n -h "ssh $m"
-    tmux selectl -t $n even-vertical
+    tmux splitw -t $n -v "ssh $m"
 done
+tmux selectl -t $nw even-vertical
