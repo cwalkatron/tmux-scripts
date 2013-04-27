@@ -1,12 +1,13 @@
 #!/bin/bash
 
-ARGS=$(getopt -o t:h -n "tssh" -- "$@")
+ARGS=$(getopt -o t:hs -n "tssh" -- "$@")
 
 usage () {
     cat <<EOF
-Usage $(basename $0) [ -n WINDOWNAME ] [ HOST [ HOST ... ] ]
+Usage $(basename $0) [-s] [-t WINDOWNAME] [HOST [HOST ...]]
 
- -n             : name the tmux window WINDOWNAME
+ -t             : name the tmux window WINDOWNAME
+ -s             : tiled layout
 
 Open a new tmux window with a pane for an ssh session to each HOST
 EOF
@@ -18,6 +19,7 @@ eval set -- "$ARGS"
 while true; do
     case "$1" in
         -t) WNAME=${2}; shift 2;;
+        -s) SQ=1; shift 1;;
         -h) usage; exit 0;;
         --) shift; break;;
         *) echo "Internal error!"; exit 1;;
@@ -30,4 +32,8 @@ nw=$(echo ${n} | cut -d. -f1)
 for m in $*; do
     tmux splitw -t $n -v "ssh $m"
 done
-tmux selectl -t $nw even-vertical
+if [ ! -z $SQ ]; then 
+    tmux selectl -t $nw tiled
+else
+    tmux selectl -t $nw even-vertical
+fi
