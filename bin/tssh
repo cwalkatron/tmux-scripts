@@ -14,6 +14,7 @@ EOF
 }
 
 eval set -- "$ARGS"
+WNAME=tssh
 
 # option processing
 while true; do
@@ -30,7 +31,7 @@ first=$1; shift
 n=$(tmux neww -n ${WNAME} -dP "ssh $first")
 nw=$(echo ${n} | cut -d. -f1)
 for m in $*; do
-    tmux splitw -t $n -v "ssh $m"
+    tmux splitw -v -t $n "ssh $m"
 done
 if [ ! -z $SQ ]; then 
     tmux selectl -t $nw tiled
