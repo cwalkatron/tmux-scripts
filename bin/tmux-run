@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# I like to make 2 sessions that are clones of one another (they have the same
+# windows). That way you always have all your context in "one" session but you
+# have the freedom to operate in two distinct windows.
+
 SESSION=$USER
 IRC_NICK=$USER
 
